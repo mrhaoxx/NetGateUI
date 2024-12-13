@@ -123,7 +123,7 @@ async function save() {
       method: 'POST',
       body: ed.getValue()
     });
-    document.getElementById('status')!.textContent = 'Config Saved ' + response.statusText + " " + new Date().toLocaleString();
+    document.getElementById('status')!.textContent = 'Config Saved ' + response.statusText + " " + new Date().toISOString();
   } catch (error) {
     alert('Request failed');
   }
