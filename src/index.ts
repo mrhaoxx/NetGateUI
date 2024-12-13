@@ -154,6 +154,20 @@ async function shutdown() {
   }
 }
 
+async function reload() {
+  await save();
+  try {
+    const response = await fetch('/api/v1/cfg/reload');
+    if (response.status != 202) {
+      alert(await response.text());
+    }else{
+      alert('Config reloaded all successfully');
+    }
+  } catch (error) {
+    alert('Request failed');
+  }
+}
+
 async function hash() {
   const ha = document.getElementById('hasky') as HTMLInputElement;
   try {
@@ -178,7 +192,7 @@ document.getElementById('shutdown')?.addEventListener('click', shutdown);
 document.getElementById('Hash')?.addEventListener('click', hash);
 document.getElementById('update')?.addEventListener('click', update);
 document.getElementById('save')?.addEventListener('click', save);
-
+document.getElementById('reload')?.addEventListener('click', reload);
 
 gstatus.textContent = 'Updating Config...';
 
