@@ -5,9 +5,10 @@ import HtmlInlineScriptPlugin from 'html-inline-script-webpack-plugin';
 
 export default {
   output: {
-    filename: '[contenthash].js'
+    filename: '[contenthash].js',
+    clean: true,
   },
-  devtool: 'source-map',
+  devtool: false,
   resolve: {
     extensions: ['.mjs', '.js', '.ts']
   },
@@ -18,11 +19,6 @@ export default {
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
-        // Monaco editor uses .ttf icons.
-        test: /\.(svg|ttf)$/,
-        type: 'asset/resource'
-      },
-      {
         test: /\.ts$/,
         loader: 'ts-loader',
         options: { transpileOnly: true }
@@ -30,8 +26,20 @@ export default {
     ]
   },
   optimization: {
-    minimizer: ['...', new CssMinimizerPlugin()]
+    minimize: true,
+    minimizer: ['...', new CssMinimizerPlugin()],
+    usedExports: true,
   },
-  plugins: [new HtmlWebPackPlugin(), new MiniCssExtractPlugin({ filename: '[contenthash].css' })]
+  plugins: [new HtmlWebPackPlugin(
+    {
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+      },
+    }
+  ), new MiniCssExtractPlugin({ filename: '[contenthash].css' })]
 }
 

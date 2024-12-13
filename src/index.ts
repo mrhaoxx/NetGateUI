@@ -107,7 +107,7 @@ editor.onDidChangeMarkers(([resource]) => {
 
 async function update() {
   try {
-    const response = await fetch('/cfg/get');
+    const response = await fetch('/api/v1/cfg/get');
     if (!response.ok) throw new Error(`Request failed: ${response.status}`);
     const text = await response.text();
     ed.setValue(text);
@@ -119,7 +119,7 @@ async function update() {
 
 async function save() {
   try {
-    const response = await fetch('/cfg/save', {
+    const response = await fetch('/api/v1/cfg/save', {
       method: 'POST',
       body: ed.getValue()
     });
