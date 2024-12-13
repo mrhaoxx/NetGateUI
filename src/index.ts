@@ -9,6 +9,8 @@ import { configureMonacoYaml, type SchemasSettings } from 'monaco-yaml'
 import './index.css'
 
 
+var gstatus = document.getElementById('status')!;
+
 window.MonacoEnvironment = {
   getWorker(moduleId, label) {
     switch (label) {
@@ -35,6 +37,7 @@ const monacoYaml = configureMonacoYaml(monaco, {
 const value = `# Wait For Javascript to Get The Config
 `.replace(/:$/m, ': ')
 
+gstatus.textContent = 'Waiting Monaco Editor...'
 
 const ed = editor.create(document.getElementById('editor')!, {
   automaticLayout: true,
@@ -48,31 +51,9 @@ const ed = editor.create(document.getElementById('editor')!, {
   formatOnType: true
 })
 
-
-
-/**
- * Get the document symbols that contain the given position.
- *
- * @param symbols
- *   The symbols to iterate.
- * @param position
- *   The position for which to filter document symbols.
- * @yields
- * The document symbols that contain the given position.
- */
-function* iterateSymbols(
-  symbols: languages.DocumentSymbol[],
-  position: Position
-): Iterable<languages.DocumentSymbol> {
-  for (const symbol of symbols) {
-    if (Range.containsPosition(symbol.range, position)) {
-      yield symbol
-      if (symbol.children) {
-        yield* iterateSymbols(symbol.children, position)
-      }
-    }
-  }
-}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  editor.setTheme(e.matches ? 'vs-dark' : 'vs-light');
+});
 
 
 editor.onDidChangeMarkers(([resource]) => {
@@ -116,12 +97,14 @@ editor.onDidChangeMarkers(([resource]) => {
     )
     const text = document.createElement('div')
     text.classList.add('problem-text')
-    text.textContent = "No Problems Found"
+    text.textContent = "No issues detected."
     wrapper.append(codicon, text)
     problems.append(wrapper)
   }
 
 })
+
+gstatus.textContent = 'Monaco Editor Ready'
 
 
 const problems = document.getElementById('problems')!
@@ -195,6 +178,9 @@ document.getElementById('shutdown')?.addEventListener('click', shutdown);
 document.getElementById('Hash')?.addEventListener('click', hash);
 document.getElementById('update')?.addEventListener('click', update);
 document.getElementById('save')?.addEventListener('click', save);
+
+
+gstatus.textContent = 'Updating Config...';
 
 update();
 
