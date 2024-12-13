@@ -117,7 +117,7 @@ codicon.classList.add(
 )
 const text = document.createElement('div')
 text.classList.add('problem-text')
-text.textContent = "No Problems Found"
+text.textContent = "No issues detected."
 wrapper.append(codicon, text)
 problems.append(wrapper)
 
