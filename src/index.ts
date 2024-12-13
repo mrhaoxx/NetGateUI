@@ -81,10 +81,12 @@ editor.onDidChangeMarkers(([resource]) => {
   while (problems.lastChild) {
     problems.lastChild.remove()
   }
+  var isOK = true;
   for (const marker of markers) {
     if (marker.severity === MarkerSeverity.Hint) {
       continue
     }
+    isOK = false;
     const wrapper = document.createElement('div')
     wrapper.setAttribute('role', 'button')
     const codicon = document.createElement('div')
@@ -103,7 +105,38 @@ editor.onDidChangeMarkers(([resource]) => {
     })
     problems.append(wrapper)
   }
+
+  if (isOK) {
+    const wrapper = document.createElement('div')
+    wrapper.classList.add('problem')
+    const codicon = document.createElement('div')
+    codicon.classList.add(
+      'codicon',
+      'codicon-check'
+    )
+    const text = document.createElement('div')
+    text.classList.add('problem-text')
+    text.textContent = "No Problems Found"
+    wrapper.append(codicon, text)
+    problems.append(wrapper)
+  }
+
 })
+
+
+const problems = document.getElementById('problems')!
+const wrapper = document.createElement('div')
+wrapper.classList.add('problem')
+const codicon = document.createElement('div')
+codicon.classList.add(
+  'codicon',
+  'codicon-check'
+)
+const text = document.createElement('div')
+text.classList.add('problem-text')
+text.textContent = "No Problems Found"
+wrapper.append(codicon, text)
+problems.append(wrapper)
 
 async function update() {
   try {
